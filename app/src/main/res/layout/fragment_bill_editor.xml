@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <import type="java.text.DateFormat"/>
+        <variable
+            name="viewModel"
+            type="hr.ferit.dominikzivko.myfinance.ui.dest.bills.BillEditorViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/container_padding"
+        android:divider="@drawable/divider_small"
+        android:showDividers="middle"
+        tools:context=".ui.dest.bills.BillEditorFragment">
+
+        <Button
+            style="@style/Pickbutton"
+            android:id="@+id/btn_billEditor_pickCategory"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/pickbutton_height"
+            android:text="@{viewModel.category != null ? viewModel.category.name : @string/pick_category}"
+            tools:text="@string/pick_category"/>
+
+        <Button
+            style="@style/Pickbutton"
+            android:id="@+id/btn_billEditor_pickRecipient"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/pickbutton_height"
+            android:text="@{viewModel.recipient != null ? viewModel.recipient.name : @string/pick_recipient}"
+            tools:text="@string/pick_recipient"/>
+
+        <EditText
+            android:id="@+id/et_billEditor_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:hint="@string/pick_date"
+            android:clickable="false"
+            android:focusable="false"
+            android:text="@{viewModel.date != null ? DateFormat.getDateInstance().format(viewModel.date) : ``}"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/divider"
+            android:layout_marginBottom="@dimen/divider_huge"
+            android:hint="@string/hint_description">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:text="@={viewModel.description}"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:hint="@string/hint_value"
+            android:text="@={``+viewModel.value}"/>
+
+
+    </LinearLayout>
+</layout>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/topLevelFragment">
+
+    <fragment
+        android:id="@+id/topLevelFragment"
+        android:name="hr.ferit.dominikzivko.myfinance.ui.dest.TopLevelFragment"
+        android:label="@string/my_finance"
+        tools:layout="@layout/fragment_top_level" >
+        <action
+            android:id="@+id/action_billListToDetails"
+            app:destination="@id/billDetailsFragment"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/billDetailsFragment"
+        android:name="hr.ferit.dominikzivko.myfinance.ui.dest.bills.BillDetailsFragment"
+        android:label="@string/bill_details"
+        tools:layout="@layout/fragment_bill_details" >
+        <argument
+            android:name="billID"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/billEditorFragment"
+        android:name="hr.ferit.dominikzivko.myfinance.ui.dest.bills.BillEditorFragment"
+        android:label="{title}"
+        tools:layout="@layout/fragment_bill_editor" >
+        <action
+            android:id="@+id/action_billEditorToPickRecipient"
+            app:destination="@id/partiesFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_billEditorToPickCategory"
+            app:destination="@id/categoriesFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <argument
+            android:name="title"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/partiesFragment"
+        android:name="hr.ferit.dominikzivko.myfinance.ui.dest.parties.PartiesFragment"
+        android:label="{title}"
+        tools:layout="@layout/fragment_parties" >
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument android:name="itemClickListener"
+            app:argType="hr.ferit.dominikzivko.myfinance.ui.dest.parties.PartyAdapter$ItemClickListener" />
+        <action
+            android:id="@+id/action_partyListToDetails"
+            app:destination="@id/partyDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/partyEditorFragment"
+        android:name="hr.ferit.dominikzivko.myfinance.ui.dest.parties.PartyEditorFragment"
+        android:label="{title}"
+        tools:layout="@layout/fragment_party_editor" >
+        <argument
+            android:name="title"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="hr.ferit.dominikzivko.myfinance.ui.dest.categories.CategoriesFragment"
+        android:label="{title}"
+        tools:layout="@layout/fragment_categories" >
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument android:name="itemClickListener"
+            app:argType="hr.ferit.dominikzivko.myfinance.ui.dest.categories.CategoryAdapter$ItemClickListener" />
+        <action
+            android:id="@+id/action_categoryListToDetails"
+            app:destination="@id/categoryDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoryEditorFragment"
+        android:name="hr.ferit.dominikzivko.myfinance.ui.dest.categories.CategoryEditorFragment"
+        android:label="{title}"
+        tools:layout="@layout/fragment_category_editor" >
+        <action
+            android:id="@+id/action_categoryEditorToPickCategory"
+            app:destination="@id/categoriesFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <argument
+            android:name="title"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoryDetailsFragment"
+        android:name="hr.ferit.dominikzivko.myfinance.ui.dest.categories.CategoryDetailsFragment"
+        android:label="@string/category_details"
+        tools:layout="@layout/fragment_category_details">
+        <argument
+            android:name="categoryID"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/partyDetailsFragment"
+        android:name="hr.ferit.dominikzivko.myfinance.ui.dest.parties.PartyDetailsFragment"
+        android:label="@string/party_details"
+        tools:layout="@layout/fragment_party_details" >
+        <argument
+            android:name="partyID"
+            app:argType="integer" />
+    </fragment>
+    <action android:id="@+id/action_global_billEditor" app:destination="@id/billEditorFragment" />
+    <action android:id="@+id/action_global_partyEditor" app:destination="@id/partyEditorFragment" />
+    <action android:id="@+id/action_global_categoryEditor" app:destination="@id/categoryEditorFragment" />
+    <action android:id="@+id/action_global_categories" app:destination="@id/categoriesFragment" />
+    <action android:id="@+id/action_global_parties" app:destination="@id/partiesFragment" />
+</navigation>

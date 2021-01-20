@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="main_tab_icons">
+        <item>@drawable/ic_baseline_bill_24</item>
+        <item>@drawable/ic_baseline_stacked_line_chart_24</item>
+    </integer-array>
+</resources>

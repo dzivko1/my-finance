@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Category">
+        <item name="android:textSize">@dimen/textsize_large</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Category.Large" parent="Category">
+        <item name="android:textSize">@dimen/textsize_huge</item>
+    </style>
+
+    <style name="Party">
+        <item name="android:textSize">@dimen/textsize_large</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Pickbutton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:drawableEnd">@drawable/ic_baseline_arrow_forward_ios_24</item>
+        <item name="drawableTint">?attr/colorSecondary</item>
+        <item name="strokeColor">@color/green_light</item>
+        <item name="strokeWidth">@dimen/pickbutton_stroke</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+</resources>

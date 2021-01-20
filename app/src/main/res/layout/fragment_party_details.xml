@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="viewModel"
+            type="hr.ferit.dominikzivko.myfinance.ui.dest.parties.PartyDetailsViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/container_padding"
+        tools:context=".ui.dest.parties.PartyDetailsFragment">
+
+        <TextView
+            style="@style/Party"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.party.name}"
+            tools:text="Party name"/>
+
+        <hr.ferit.dominikzivko.myfinance.ui.component.AddressView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            address="@{viewModel.party.address}"/>
+
+    </LinearLayout>
+</layout>

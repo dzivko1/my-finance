@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="billDetails"
+            type="hr.ferit.dominikzivko.myfinance.data.BillDetails" />
+        <variable
+            name="clickListener"
+            type="hr.ferit.dominikzivko.myfinance.ui.dest.bills.BillAdapter.ItemClickListener" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/container_padding"
+        android:onClick="@{() -> clickListener.onClick(billDetails.bill.id)}">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:divider="@drawable/divider_small"
+            android:showDividers="middle">
+
+            <TextView
+                style="@style/Category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{billDetails.category.name}"
+                android:textColor="@{billDetails.category.color}"
+                tools:text="Category" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{billDetails.recipient.name}"
+                tools:text="Recipient name" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{billDetails.bill.date}"
+                tools:text="Date" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@{String.valueOf(billDetails.bill.value)}"
+            tools:text="Value" />
+
+    </LinearLayout>
+</layout>

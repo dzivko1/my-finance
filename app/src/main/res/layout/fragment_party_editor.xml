@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="viewModel"
+            type="hr.ferit.dominikzivko.myfinance.ui.dest.parties.PartyEditorViewModel" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/container_padding"
+        android:divider="@drawable/divider"
+        android:showDividers="middle"
+        tools:context=".ui.dest.parties.PartyEditorFragment">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/divider_large"
+            android:inputType="textPersonName"
+            android:hint="@string/hint_name"
+            android:text="@={viewModel.name}"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPostalAddress"
+            android:hint="@string/hint_street"
+            android:text="@={viewModel.address.street}"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="7"
+            android:inputType="number"
+            android:hint="@string/hint_streetNumber"
+            android:text="@={viewModel.address.streetNumber}"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="@string/hint_city"
+            android:text="@={viewModel.address.city}"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="7"
+            android:inputType="number"
+            android:hint="@string/hint_zipcode"
+            android:text="@={viewModel.address.zipcode}"/>
+    </LinearLayout>
+</layout>

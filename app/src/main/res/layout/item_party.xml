@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="party"
+            type="hr.ferit.dominikzivko.myfinance.data.Party" />
+        <variable
+            name="clickListener"
+            type="hr.ferit.dominikzivko.myfinance.ui.dest.parties.PartyAdapter.ItemClickListener" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/container_padding"
+        android:onClick="@{() -> clickListener.onClick(party)}">
+
+        <TextView
+            style="@style/Party"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{party.name}"
+            tools:text="Name"/>
+
+        <hr.ferit.dominikzivko.myfinance.ui.component.AddressView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            address="@{party.address}"/>
+
+    </LinearLayout>
+</layout>

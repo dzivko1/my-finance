@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="viewModel"
+            type="hr.ferit.dominikzivko.myfinance.ui.dest.categories.CategoryDetailsViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/container_padding"
+        tools:context=".ui.dest.categories.CategoryDetailsFragment">
+
+        <TextView
+            style="@style/Category.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@{viewModel.categoryDetails.category.color}"
+            android:text="@{viewModel.categoryDetails.category.name}"
+            tools:text="Category name"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/divider_huge"
+            android:text="@string/parent_category"/>
+
+        <TextView
+            style="@style/Category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@{viewModel.categoryDetails.parentCategory.color}"
+            android:text="@{viewModel.categoryDetails.parentCategory.name}"
+            tools:text="Parent category name"/>
+
+    </LinearLayout>
+</layout>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="viewModel"
+            type="hr.ferit.dominikzivko.myfinance.ui.dest.bills.BillDetailsViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/container_padding"
+        android:divider="@drawable/divider"
+        android:showDividers="middle"
+        tools:context=".ui.dest.bills.BillDetailsFragment">
+
+        <TextView
+            style="@style/Category.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.billDetails.category.name}"
+            android:textColor="@{viewModel.billDetails.category.color}"
+            tools:text="Category"/>
+
+        <TextView
+            style="@style/Party"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="-4dp"
+            android:text="@{viewModel.billDetails.recipient.name}"
+            tools:text="Recipient name"/>
+
+        <hr.ferit.dominikzivko.myfinance.ui.component.AddressView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            address="@{viewModel.billDetails.recipient.address}"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/divider_huge"
+            android:text="@{viewModel.billDetails.bill.description}"
+            tools:text="Description"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.billDetails.bill.date}"
+            tools:text="Date"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="@dimen/textsize_large"
+            android:text="@{String.valueOf(viewModel.billDetails.bill.value)}"
+            tools:text="Value"/>
+    </LinearLayout>
+</layout>
