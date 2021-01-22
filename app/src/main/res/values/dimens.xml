@@ -5,6 +5,7 @@
 
     <dimen name="expanded_toolbar_height">100dp</dimen>
     <dimen name="pickbutton_height">64dp</dimen>
+    <dimen name="chart_height">200dp</dimen>
 
     <dimen name="divider_small">4dp</dimen>
     <dimen name="divider">8dp</dimen>

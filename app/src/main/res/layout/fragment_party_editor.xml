@@ -21,14 +21,14 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/divider_large"
             android:inputType="textPersonName"
-            android:hint="@string/hint_name"
+            android:hint="@string/name"
             android:text="@={viewModel.name}"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPostalAddress"
-            android:hint="@string/hint_street"
+            android:hint="@string/street"
             android:text="@={viewModel.address.street}"/>
 
         <EditText
@@ -36,14 +36,14 @@
             android:layout_height="wrap_content"
             android:ems="7"
             android:inputType="number"
-            android:hint="@string/hint_streetNumber"
+            android:hint="@string/street_number"
             android:text="@={viewModel.address.streetNumber}"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:hint="@string/hint_city"
+            android:hint="@string/city"
             android:text="@={viewModel.address.city}"/>
 
         <EditText
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:ems="7"
             android:inputType="number"
-            android:hint="@string/hint_zipcode"
+            android:hint="@string/zipcode"
             android:text="@={viewModel.address.zipcode}"/>
     </LinearLayout>
 </layout>

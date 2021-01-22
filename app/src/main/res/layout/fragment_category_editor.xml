@@ -22,10 +22,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:hint="@string/hint_name"
+            android:hint="@string/name"
             android:text="@={viewModel.name}" />
 
         <TextView
+            style="@style/Label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="-8dp"
@@ -36,6 +37,7 @@
             android:id="@+id/btn_categoryEditor_pickParent"
             android:layout_width="match_parent"
             android:layout_height="@dimen/pickbutton_height"
+            android:textColor="@{viewModel.parentCategory != null ? viewModel.parentCategory.color : @color/gray}"
             android:text="@{viewModel.parentCategory.name}"
             tools:text="Parent category"/>
 

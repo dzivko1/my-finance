@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import hr.ferit.dominikzivko.myfinance.ui.dest.bills.BillsFragment;
+import hr.ferit.dominikzivko.myfinance.ui.dest.stats.StatsFragment;
 
 public class SectionsPagerAdapter extends FragmentStateAdapter {
 
@@ -19,8 +20,7 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
             case 0:
                 return new BillsFragment();
             default:
-                // placeholder
-                return new BillsFragment();
+                return new StatsFragment();
         }
     }
 

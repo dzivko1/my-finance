@@ -49,6 +49,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.github.QuadFlask:colorpicker:0.0.15'
+    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
 
     def nav_version = "2.3.2"
     implementation "androidx.navigation:navigation-fragment:$nav_version"

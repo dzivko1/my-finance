@@ -48,6 +48,26 @@ public class BillRepository {
         return partyDao.getByID(partyID);
     }
 
+    public LiveData<Integer> getBillCount() {
+        return billDao.count();
+    }
+
+    public LiveData<Integer> getCategoryCount() {
+        return categoryDao.count();
+    }
+
+    public LiveData<Double> getSummedBillsValue() {
+        return billDao.summedValue();
+    }
+
+    public LiveData<Double> getSummedBillsValueForThisMonth() {
+        return billDao.summedValueThisMonth();
+    }
+
+    public LiveData<List<CategoryTotal>> getTotalByCategory() {
+        return billDao.totalByCategory();
+    }
+
     public void addBill(Bill bill) {
         runAsync(() -> billDao.insert(bill));
     }

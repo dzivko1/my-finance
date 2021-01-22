@@ -21,6 +21,9 @@ public interface CategoryDao {
     @Query("DELETE FROM Category WHERE id = :id")
     void delete(int id);
 
+    @Query("SELECT COUNT(*) FROM category")
+    LiveData<Integer> count();
+
     @Query("SELECT * FROM Category")
     LiveData<List<Category>> getAll();
 

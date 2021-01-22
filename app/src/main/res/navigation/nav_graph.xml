@@ -124,4 +124,9 @@
     <action android:id="@+id/action_global_categoryEditor" app:destination="@id/categoryEditorFragment" />
     <action android:id="@+id/action_global_categories" app:destination="@id/categoriesFragment" />
     <action android:id="@+id/action_global_parties" app:destination="@id/partiesFragment" />
+    <fragment
+        android:id="@+id/statsFragment"
+        android:name="hr.ferit.dominikzivko.myfinance.ui.dest.stats.StatsFragment"
+        android:label="StatsFragment"
+        tools:layout="@layout/fragment_stats"/>
 </navigation>

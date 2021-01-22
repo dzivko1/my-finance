@@ -23,6 +23,7 @@
             android:id="@+id/btn_billEditor_pickCategory"
             android:layout_width="match_parent"
             android:layout_height="@dimen/pickbutton_height"
+            android:textColor="@{viewModel.category != null ? viewModel.category.color : @color/gray}"
             android:text="@{viewModel.category != null ? viewModel.category.name : @string/pick_category}"
             tools:text="@string/pick_category"/>
 
@@ -49,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/divider"
             android:layout_marginBottom="@dimen/divider_huge"
-            android:hint="@string/hint_description">
+            android:hint="@string/description">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -63,7 +64,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="numberDecimal"
-            android:hint="@string/hint_value"
+            android:hint="@string/value"
             android:text="@={``+viewModel.value}"/>
 
 
