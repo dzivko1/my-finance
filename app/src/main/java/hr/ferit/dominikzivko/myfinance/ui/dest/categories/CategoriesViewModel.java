@@ -6,20 +6,20 @@ import androidx.lifecycle.ViewModel;
 import java.util.List;
 
 import hr.ferit.dominikzivko.myfinance.data.BillRepository;
-import hr.ferit.dominikzivko.myfinance.data.Category;
+import hr.ferit.dominikzivko.myfinance.data.CategoryDetails;
 
 public class CategoriesViewModel extends ViewModel {
 
     private final BillRepository billRepository;
 
-    private final LiveData<List<Category>> categories;
+    private final LiveData<List<CategoryDetails>> categories;
 
     public CategoriesViewModel(BillRepository billRepository) {
         this.billRepository = billRepository;
         this.categories = billRepository.getCategories();
     }
 
-    public LiveData<List<Category>> getCategories() {
+    public LiveData<List<CategoryDetails>> getCategories() {
         return categories;
     }
 }

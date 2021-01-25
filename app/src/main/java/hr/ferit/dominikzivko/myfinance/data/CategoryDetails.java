@@ -1,6 +1,9 @@
 package hr.ferit.dominikzivko.myfinance.data;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.room.Embedded;
+import androidx.room.Ignore;
 import androidx.room.Relation;
 
 import java.util.Objects;
@@ -49,4 +52,17 @@ public class CategoryDetails {
     public int hashCode() {
         return Objects.hash(category, parentCategory);
     }
+
+    @Ignore
+    public static final DiffUtil.ItemCallback<CategoryDetails> DIFF_CALLBACK = new DiffUtil.ItemCallback<CategoryDetails>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull CategoryDetails oldItem, @NonNull CategoryDetails newItem) {
+            return oldItem.getCategory().getId() == newItem.getCategory().getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull CategoryDetails oldItem, @NonNull CategoryDetails newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
 }

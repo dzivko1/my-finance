@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.cardview.widget.CardView
+        style="@style/ChartCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart_categoryStats_dayValue"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chart_height"/>
+    </androidx.cardview.widget.CardView>
+</layout>

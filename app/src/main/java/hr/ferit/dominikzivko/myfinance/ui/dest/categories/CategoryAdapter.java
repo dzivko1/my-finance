@@ -12,14 +12,15 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 
 import hr.ferit.dominikzivko.myfinance.data.Category;
+import hr.ferit.dominikzivko.myfinance.data.CategoryDetails;
 import hr.ferit.dominikzivko.myfinance.databinding.ItemCategoryBinding;
 
-public class CategoryAdapter extends ListAdapter<Category, CategoryAdapter.ViewHolder> {
+public class CategoryAdapter extends ListAdapter<CategoryDetails, CategoryAdapter.ViewHolder> {
 
     private final ItemClickListener itemClickListener;
 
     public CategoryAdapter(ItemClickListener itemClickListener) {
-        super(Category.DIFF_CALLBACK);
+        super(CategoryDetails.DIFF_CALLBACK);
         this.itemClickListener = itemClickListener;
     }
 
@@ -45,8 +46,8 @@ public class CategoryAdapter extends ListAdapter<Category, CategoryAdapter.ViewH
             this.binding = binding;
         }
 
-        public void bind(Category category, ItemClickListener clickListener) {
-            binding.setCategory(category);
+        public void bind(CategoryDetails categoryDetails, ItemClickListener clickListener) {
+            binding.setCategoryDetails(categoryDetails);
             binding.setClickListener(clickListener);
             binding.executePendingBindings();
         }

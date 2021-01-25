@@ -15,6 +15,9 @@
             app:destination="@id/billDetailsFragment"
             app:enterAnim="@anim/fragment_open_enter"
             app:exitAnim="@anim/fragment_open_exit" />
+        <action
+            android:id="@+id/action_statsToCategoryStats"
+            app:destination="@id/categoryStatsFragment" />
     </fragment>
     <fragment
         android:id="@+id/billDetailsFragment"
@@ -125,8 +128,8 @@
     <action android:id="@+id/action_global_categories" app:destination="@id/categoriesFragment" />
     <action android:id="@+id/action_global_parties" app:destination="@id/partiesFragment" />
     <fragment
-        android:id="@+id/statsFragment"
-        android:name="hr.ferit.dominikzivko.myfinance.ui.dest.stats.StatsFragment"
-        android:label="StatsFragment"
-        tools:layout="@layout/fragment_stats"/>
+        android:id="@+id/categoryStatsFragment"
+        android:name="hr.ferit.dominikzivko.myfinance.ui.dest.stats.CategoryStatsFragment"
+        android:label="@string/spending_by_category"
+        tools:layout="@layout/fragment_category_stats" />
 </navigation>

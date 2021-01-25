@@ -2,8 +2,6 @@ package hr.ferit.dominikzivko.myfinance.data;
 
 import android.graphics.Color;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
@@ -96,18 +94,4 @@ public class Category {
     public int hashCode() {
         return Objects.hash(name, color, parentCategoryID);
     }
-
-
-    @Ignore
-    public static final DiffUtil.ItemCallback<Category> DIFF_CALLBACK = new DiffUtil.ItemCallback<Category>() {
-        @Override
-        public boolean areItemsTheSame(@NonNull Category oldItem, @NonNull Category newItem) {
-            return oldItem.getId() == newItem.getId();
-        }
-
-        @Override
-        public boolean areContentsTheSame(@NonNull Category oldItem, @NonNull Category newItem) {
-            return oldItem.equals(newItem);
-        }
-    };
 }

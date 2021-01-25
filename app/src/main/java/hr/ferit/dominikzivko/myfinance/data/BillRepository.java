@@ -28,7 +28,7 @@ public class BillRepository {
         return billDao.getAll();
     }
 
-    public LiveData<List<Category>> getCategories() {
+    public LiveData<List<CategoryDetails>> getCategories() {
         return categoryDao.getAll();
     }
 
@@ -66,6 +66,10 @@ public class BillRepository {
 
     public LiveData<List<CategoryTotal>> getTotalByCategory() {
         return billDao.totalByCategory();
+    }
+
+    public LiveData<List<DayBillValue>> getBillDayValuesWithCategory(int categoryID) {
+        return billDao.getDayValuesWithCategory(categoryID);
     }
 
     public void addBill(Bill bill) {

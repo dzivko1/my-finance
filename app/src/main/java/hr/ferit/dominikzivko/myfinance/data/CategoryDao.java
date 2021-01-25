@@ -24,8 +24,9 @@ public interface CategoryDao {
     @Query("SELECT COUNT(*) FROM category")
     LiveData<Integer> count();
 
+    @Transaction
     @Query("SELECT * FROM Category")
-    LiveData<List<Category>> getAll();
+    LiveData<List<CategoryDetails>> getAll();
 
     @Transaction
     @Query("SELECT * FROM category WHERE id = :categoryID")

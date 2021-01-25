@@ -9,27 +9,30 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.navigation.NavDirections;
+import androidx.navigation.fragment.NavHostFragment;
 
-import com.anychart.APIlib;
-import com.anychart.AnyChart;
-import com.anychart.chart.common.dataentry.DataEntry;
-import com.anychart.chart.common.dataentry.ValueDataEntry;
-import com.anychart.charts.Cartesian;
-import com.anychart.charts.Pie;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import hr.ferit.dominikzivko.myfinance.R;
 import hr.ferit.dominikzivko.myfinance.data.CategoryTotal;
 import hr.ferit.dominikzivko.myfinance.databinding.FragmentStatsBinding;
 import hr.ferit.dominikzivko.myfinance.ui.ViewModelProviders;
+import hr.ferit.dominikzivko.myfinance.ui.dest.TopLevelFragmentDirections;
 
 public class StatsFragment extends Fragment {
 
     private StatsViewModel viewModel;
-
-    private Cartesian chart_totalByCategoryBar;
-    private Pie chart_totalByCategoryPie;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,45 +48,73 @@ public class StatsFragment extends Fragment {
         binding.setLifecycleOwner(getViewLifecycleOwner());
         binding.setViewModel(viewModel);
 
-        // Apparently when charts are in a scroll view we have to call this setActiveAnyChartView
-        // any time we want to change a chart in order for them to show correctly
-        APIlib.getInstance().setActiveAnyChartView(binding.chartStatsTotalByCategoryBar);
-        chart_totalByCategoryBar = AnyChart.bar();
-        binding.chartStatsTotalByCategoryBar.setChart(chart_totalByCategoryBar);
+        setupTotalByCategoryCharts(binding);
 
-        APIlib.getInstance().setActiveAnyChartView(binding.chartStatsTotalByCategoryPie);
-        chart_totalByCategoryPie = AnyChart.pie();
-        binding.chartStatsTotalByCategoryPie.setChart(chart_totalByCategoryPie);
-
-        LiveData<List<CategoryTotal>> categoryTotals = viewModel.getTotalByCategory();
-        categoryTotals.observe(getViewLifecycleOwner(), value -> {
-            List<DataEntry> data = convertToDataEntries(value);
-
-            APIlib.getInstance().setActiveAnyChartView(binding.chartStatsTotalByCategoryBar);
-            chart_totalByCategoryBar.data(data);
-
-            APIlib.getInstance().setActiveAnyChartView(binding.chartStatsTotalByCategoryPie);
-            chart_totalByCategoryPie.data(data);
-            setPiePalette(chart_totalByCategoryPie, value);
-        });
+        binding.btnStatsByCategory.setOnClickListener(v -> navigateToCategoryStats());
+        binding.btnStatsByRecipient.setOnClickListener(v -> navigateToRecipientStats());
 
         return binding.getRoot();
     }
 
-    private List<DataEntry> convertToDataEntries(List<CategoryTotal> categoryTotals) {
-        List<DataEntry> data = new ArrayList<>(categoryTotals.size());
-        for (CategoryTotal ct : categoryTotals) {
-            data.add(new ValueDataEntry(ct.getCategoryName(), ct.getTotalValue()));
-        }
-        return data;
+    private void setupTotalByCategoryCharts(FragmentStatsBinding binding) {
+        BarDataSet barDataSet = setupTotalByCategoryBarChart(binding);
+        PieDataSet pieDataSet = setupTotalByCategoryPieChart(binding);
+
+        LiveData<List<CategoryTotal>> categoryTotalsLiveData = viewModel.getTotalByCategory();
+        categoryTotalsLiveData.observe(getViewLifecycleOwner(), categoryTotals ->
+                updateChartData(categoryTotals, barDataSet, pieDataSet, binding));
     }
 
-    private void setPiePalette(Pie pieChart, List<CategoryTotal> categoryTotals) {
-        List<String> colors = new ArrayList<>(categoryTotals.size());
+    private BarDataSet setupTotalByCategoryBarChart(FragmentStatsBinding binding) {
+        BarDataSet dataSet = new BarDataSet(new ArrayList<BarEntry>(Arrays.asList(new BarEntry(0, 0))), getResources().getString(R.string.total_by_category));
+        BarData data = new BarData(dataSet);
+        binding.chartStatsTotalByCategoryBar.setData(data);
+        binding.chartStatsTotalByCategoryBar.setAutoScaleMinMaxEnabled(true);
+        return dataSet;
+    }
+
+    private PieDataSet setupTotalByCategoryPieChart(FragmentStatsBinding binding) {
+        PieDataSet dataSet = new PieDataSet(new ArrayList<>(Arrays.asList(new PieEntry(0))), getResources().getString(R.string.total_by_category));
+        PieData data = new PieData(dataSet);
+        binding.chartStatsTotalByCategoryPie.setData(data);
+        return dataSet;
+    }
+
+    private void updateChartData(List<CategoryTotal> categoryTotals, BarDataSet barDataSet, PieDataSet pieDataSet, FragmentStatsBinding binding) {
+        List<BarEntry> barEntries = new ArrayList<>(categoryTotals.size());
+        List<PieEntry> pieEntries = new ArrayList<>(categoryTotals.size());
+        List<String> labels = new ArrayList<>(categoryTotals.size());
+        List<Integer> colors = new ArrayList<>(categoryTotals.size());
+
+        int i = 0;
         for (CategoryTotal ct : categoryTotals) {
-            colors.add("#" + Integer.toHexString(ct.getCategoryColor()).substring(2));
+            barEntries.add(new BarEntry(i, (float) ct.getTotalValue()));
+            pieEntries.add(new PieEntry((float) ct.getTotalValue(), ct.getCategoryName()));
+            labels.add(ct.getCategoryName());
+            colors.add(ct.getCategoryColor());
+            i++;
         }
-        pieChart.palette(colors.toArray(new String[colors.size()]));
+
+        barDataSet.setValues(barEntries);
+        barDataSet.setColors(colors);
+        binding.chartStatsTotalByCategoryBar.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+
+        pieDataSet.setValues(pieEntries);
+        pieDataSet.setColors(colors);
+
+        binding.chartStatsTotalByCategoryBar.notifyDataSetChanged();
+        binding.chartStatsTotalByCategoryPie.notifyDataSetChanged();
+        binding.chartStatsTotalByCategoryBar.invalidate();
+        binding.chartStatsTotalByCategoryPie.invalidate();
+    }
+
+    private void navigateToCategoryStats() {
+        NavDirections action = TopLevelFragmentDirections.actionStatsToCategoryStats();
+        NavHostFragment.findNavController(this).navigate(action);
+    }
+
+    private void navigateToRecipientStats() {
+
     }
 
 }

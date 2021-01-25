@@ -19,6 +19,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.github.mikephil.charting.utils.Utils;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.bottomappbar.BottomAppBar;
@@ -71,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         App app = (App) getApplication();
         app.appContainer = new AppContainer(app);
 
+        // obligatory init for charting library
+        Utils.init(getApplicationContext());
         initUI();
 
         // TODO temp

@@ -5,7 +5,8 @@
 
     <dimen name="expanded_toolbar_height">100dp</dimen>
     <dimen name="pickbutton_height">64dp</dimen>
-    <dimen name="chart_height">200dp</dimen>
+    <dimen name="chart_height">250dp</dimen>
+    <dimen name="tall_chart_height">300dp</dimen>
 
     <dimen name="divider_small">4dp</dimen>
     <dimen name="divider">8dp</dimen>
@@ -13,9 +14,16 @@
     <dimen name="divider_huge">32dp</dimen>
 
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="stat_card_margin">8dp</dimen>
+    <dimen name="chart_card_margin">8dp</dimen>
     <dimen name="container_padding">16dp</dimen>
+    <dimen name="container_padding_small">8dp</dimen>
+    <dimen name="stat_card_elevation">5dp</dimen>
+    <dimen name="chart_card_elevation">5dp</dimen>
 
     <dimen name="pickbutton_stroke">2dp</dimen>
+    <dimen name="stat_card_corner_radius">5dp</dimen>
+    <dimen name="chart_card_corner_radius">10dp</dimen>
 
     <dimen name="textsize_huge">22sp</dimen>
     <dimen name="textsize_large">18sp</dimen>

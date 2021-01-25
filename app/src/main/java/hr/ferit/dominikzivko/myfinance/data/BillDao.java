@@ -31,6 +31,9 @@ public interface BillDao {
     @Query("SELECT * FROM bill")
     LiveData<List<BillDetails>> getAll();
 
+    @Query("SELECT date, value FROM bill WHERE categoryID = :categoryID")
+    LiveData<List<DayBillValue>> getDayValuesWithCategory(int categoryID);
+
     @Transaction
     @Query("SELECT * FROM bill WHERE id = :billID")
     LiveData<BillDetails> getByID(int billID);
@@ -43,7 +46,7 @@ public interface BillDao {
     LiveData<Double> summedValueThisMonth();
 
     @Query("SELECT category.name AS categoryName, SUM(bill.value) AS totalValue, category.color AS categoryColor " +
-            "FROM bill INNER JOIN category ON bill.categoryID == category.id GROUP BY category.name ")
+            "FROM category LEFT JOIN bill ON bill.categoryID == category.id GROUP BY category.name ")
     LiveData<List<CategoryTotal>> totalByCategory();
 
 }

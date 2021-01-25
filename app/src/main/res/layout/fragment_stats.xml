@@ -16,15 +16,15 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/container_padding"
             android:layout_marginBottom="?attr/actionBarSize"
+            android:paddingVertical="@dimen/container_padding_small"
             tools:context=".ui.dest.stats.StatsFragment">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_stats_billNumeric"
+                style="@style/StatCard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
                 app:layout_constraintEnd_toStartOf="@+id/card_stats_categoryNumeric"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -51,6 +51,7 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_stats_categoryNumeric"
+                style="@style/StatCard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_toStartOf="@id/card_stats_billNumeric"
@@ -81,6 +82,7 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_stats_spending"
+                style="@style/StatCard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -125,16 +127,18 @@
                 android:id="@+id/layout_stats_navButtons"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:divider="@drawable/divider"
+                android:layout_marginEnd="8dp"
                 android:orientation="horizontal"
+                android:divider="@drawable/divider"
                 android:showDividers="middle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/card_stats_spending">
 
                 <Button
-
+                    android:id="@+id/btn_stats_byCategory"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -142,6 +146,7 @@
                     android:text="@string/spending_by_category" />
 
                 <Button
+                    android:id="@+id/btn_stats_byRecipient"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -151,14 +156,15 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_stats_totalByCategoryBarChart"
+                style="@style/ChartCard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/layout_stats_navButtons">
 
-                <com.anychart.AnyChartView
+                <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/chart_stats_totalByCategoryBar"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/chart_height" />
@@ -166,17 +172,20 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                style="@style/ChartCard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/card_stats_totalByCategoryBarChart">
 
-                <com.anychart.AnyChartView
+                <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/chart_stats_totalByCategoryPie"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/chart_height"/>
+                    android:layout_height="@dimen/tall_chart_height" />
 
             </androidx.cardview.widget.CardView>
 

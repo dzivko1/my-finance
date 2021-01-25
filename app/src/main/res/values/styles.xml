@@ -37,4 +37,16 @@
         <item name="android:textSize">@dimen/textsize_large</item>
     </style>
 
+    <style name="StatCard">
+        <item name="cardCornerRadius">@dimen/stat_card_corner_radius</item>
+        <item name="cardElevation">@dimen/stat_card_elevation</item>
+        <item name="android:layout_margin">@dimen/stat_card_margin</item>
+    </style>
+
+    <style name="ChartCard">
+        <item name="cardCornerRadius">@dimen/chart_card_corner_radius</item>
+        <item name="cardElevation">@dimen/chart_card_elevation</item>
+        <item name="android:layout_margin">@dimen/chart_card_margin</item>
+    </style>
+
 </resources>
