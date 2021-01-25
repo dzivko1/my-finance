@@ -31,8 +31,10 @@ public interface BillDao {
     @Query("SELECT * FROM bill")
     LiveData<List<BillDetails>> getAll();
 
-    @Query("SELECT date, value FROM bill WHERE categoryID = :categoryID")
-    LiveData<List<DayBillValue>> getDayValuesWithCategory(int categoryID);
+    @Query("WITH subtree AS (SELECT c.id, c.parentCategoryID FROM category c WHERE c.id = :categoryID " +
+            "UNION ALL SELECT cc.id, cc.parentCategoryID FROM category cc JOIN subtree on cc.parentCategoryID = subtree.id) " +
+            "SELECT B.date, B.value FROM bill B join subtree C ON B.categoryID = C.id")
+    LiveData<List<DayBillValue>> getDayValuesForCategory(int categoryID);
 
     @Transaction
     @Query("SELECT * FROM bill WHERE id = :billID")

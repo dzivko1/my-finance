@@ -25,7 +25,7 @@ public class Category {
     @Ignore
     public static Category getRootCategory() {
         if (ROOT_CATEGORY == null) {
-            ROOT_CATEGORY = new Category("All bills", Color.GRAY, 1);
+            ROOT_CATEGORY = new Category("All bills", Color.GRAY, null);
             ROOT_CATEGORY.setId(1);
         }
         return ROOT_CATEGORY;
@@ -36,13 +36,13 @@ public class Category {
     private int id;
     private String name;
     private int color;
-    private int parentCategoryID;
+    private Integer parentCategoryID;
 
     @Ignore
     public Category() {
     }
 
-    public Category(String name, int color, int parentCategoryID) {
+    public Category(String name, int color, Integer parentCategoryID) {
         this.name = name;
         this.color = color;
         this.parentCategoryID = parentCategoryID;
@@ -72,11 +72,11 @@ public class Category {
         this.color = color;
     }
 
-    public int getParentCategoryID() {
+    public Integer getParentCategoryID() {
         return parentCategoryID;
     }
 
-    public void setParentCategoryID(int parentCategoryID) {
+    public void setParentCategoryID(Integer parentCategoryID) {
         this.parentCategoryID = parentCategoryID;
     }
 
@@ -86,7 +86,7 @@ public class Category {
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
         return color == category.color &&
-                parentCategoryID == category.parentCategoryID &&
+                Objects.equals(parentCategoryID, category.parentCategoryID) &&
                 Objects.equals(name, category.name);
     }
 
