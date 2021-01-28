@@ -25,7 +25,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import hr.ferit.dominikzivko.myfinance.R;
+import hr.ferit.dominikzivko.myfinance.data.Category;
+import hr.ferit.dominikzivko.myfinance.data.CategoryDetails;
 import hr.ferit.dominikzivko.myfinance.data.CategoryTotal;
+import hr.ferit.dominikzivko.myfinance.data.ObserverCaretaker;
 import hr.ferit.dominikzivko.myfinance.databinding.FragmentStatsBinding;
 import hr.ferit.dominikzivko.myfinance.ui.ViewModelProviders;
 import hr.ferit.dominikzivko.myfinance.ui.dest.TopLevelFragmentDirections;
@@ -33,6 +36,8 @@ import hr.ferit.dominikzivko.myfinance.ui.dest.TopLevelFragmentDirections;
 public class StatsFragment extends Fragment {
 
     private StatsViewModel viewModel;
+
+    private PieChartAdapter adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,7 +53,8 @@ public class StatsFragment extends Fragment {
         binding.setLifecycleOwner(getViewLifecycleOwner());
         binding.setViewModel(viewModel);
 
-        setupTotalByCategoryCharts(binding);
+        setupTotalByCategoryChart(binding);
+        setupCategoryPies(binding);
 
         binding.btnStatsByCategory.setOnClickListener(v -> navigateToCategoryStats());
         binding.btnStatsByRecipient.setOnClickListener(v -> navigateToRecipientStats());
@@ -56,40 +62,59 @@ public class StatsFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void setupTotalByCategoryCharts(FragmentStatsBinding binding) {
-        BarDataSet barDataSet = setupTotalByCategoryBarChart(binding);
-        PieDataSet pieDataSet = setupTotalByCategoryPieChart(binding);
-
-        LiveData<List<CategoryTotal>> categoryTotalsLiveData = viewModel.getTotalByCategory();
-        categoryTotalsLiveData.observe(getViewLifecycleOwner(), categoryTotals ->
-                updateChartData(categoryTotals, barDataSet, pieDataSet, binding));
-    }
-
-    private BarDataSet setupTotalByCategoryBarChart(FragmentStatsBinding binding) {
+    private void setupTotalByCategoryChart(FragmentStatsBinding binding) {
         BarDataSet dataSet = new BarDataSet(new ArrayList<BarEntry>(Arrays.asList(new BarEntry(0, 0))), getResources().getString(R.string.total_by_category));
         BarData data = new BarData(dataSet);
         binding.chartStatsTotalByCategoryBar.setData(data);
         binding.chartStatsTotalByCategoryBar.setAutoScaleMinMaxEnabled(true);
-        return dataSet;
+
+        LiveData<List<CategoryDetails>> categoriesLiveData = viewModel.getCategories();
+        categoriesLiveData.observe(getViewLifecycleOwner(), categories -> {
+
+            dataSet.clear();
+            List<Integer> colors = new ArrayList<>(categories.size());
+            List<String> labels = new ArrayList<>(categories.size());
+
+            int i = 0;
+            for (CategoryDetails cd : categories) {
+                if (cd.getCategory().getId() == Category.getRootCategory().getId())
+                    continue;
+
+                BarEntry entry = new BarEntry(i, 0);
+                dataSet.addEntry(entry);
+                colors.add(new Integer(0));
+                labels.add("");
+
+                LiveData<CategoryTotal> categoryTotalLiveData = viewModel.getTotalByCategory(cd.getCategory().getId());
+                ObserverCaretaker<CategoryTotal> observerCaretaker = new ObserverCaretaker<>(getViewLifecycleOwner());
+                int finalI = i;
+                observerCaretaker.setObserver(categoryTotalLiveData, categoryTotal -> {
+                    entry.setY((float) categoryTotal.getTotalValue());
+                    colors.set(finalI, categoryTotal.getCategoryColor());
+                    labels.set(finalI, categoryTotal.getCategoryName());
+
+                    binding.chartStatsTotalByCategoryBar.notifyDataSetChanged();
+                    binding.chartStatsTotalByCategoryBar.invalidate();
+                });
+
+                i++;
+            }
+
+            dataSet.setColors(colors);
+            binding.chartStatsTotalByCategoryBar.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+            binding.chartStatsTotalByCategoryBar.notifyDataSetChanged();
+            binding.chartStatsTotalByCategoryBar.invalidate();
+        });
     }
 
-    private PieDataSet setupTotalByCategoryPieChart(FragmentStatsBinding binding) {
-        PieDataSet dataSet = new PieDataSet(new ArrayList<>(Arrays.asList(new PieEntry(0))), getResources().getString(R.string.total_by_category));
-        PieData data = new PieData(dataSet);
-        binding.chartStatsTotalByCategoryPie.setData(data);
-        return dataSet;
-    }
-
-    private void updateChartData(List<CategoryTotal> categoryTotals, BarDataSet barDataSet, PieDataSet pieDataSet, FragmentStatsBinding binding) {
+    private void updateTotalByCategoryChart(List<CategoryTotal> categoryTotals, BarDataSet barDataSet, FragmentStatsBinding binding) {
         List<BarEntry> barEntries = new ArrayList<>(categoryTotals.size());
-        List<PieEntry> pieEntries = new ArrayList<>(categoryTotals.size());
         List<String> labels = new ArrayList<>(categoryTotals.size());
         List<Integer> colors = new ArrayList<>(categoryTotals.size());
 
         int i = 0;
         for (CategoryTotal ct : categoryTotals) {
             barEntries.add(new BarEntry(i, (float) ct.getTotalValue()));
-            pieEntries.add(new PieEntry((float) ct.getTotalValue(), ct.getCategoryName()));
             labels.add(ct.getCategoryName());
             colors.add(ct.getCategoryColor());
             i++;
@@ -98,14 +123,51 @@ public class StatsFragment extends Fragment {
         barDataSet.setValues(barEntries);
         barDataSet.setColors(colors);
         binding.chartStatsTotalByCategoryBar.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
-
-        pieDataSet.setValues(pieEntries);
-        pieDataSet.setColors(colors);
-
         binding.chartStatsTotalByCategoryBar.notifyDataSetChanged();
-        binding.chartStatsTotalByCategoryPie.notifyDataSetChanged();
         binding.chartStatsTotalByCategoryBar.invalidate();
-        binding.chartStatsTotalByCategoryPie.invalidate();
+    }
+
+    private void setupCategoryPies(FragmentStatsBinding binding) {
+        adapter = new PieChartAdapter();
+        binding.rvCategoryPies.setAdapter(adapter);
+
+        LiveData<List<CategoryDetails>> categoriesLiveData = viewModel.getCategories();
+        categoriesLiveData.observe(getViewLifecycleOwner(), categories -> {
+            List<PieData> data = constructCategoryPiesData(categories);
+            adapter.submitList(data);
+        });
+    }
+
+    private List<PieData> constructCategoryPiesData(List<CategoryDetails> categories) {
+        List<PieData> dataByCategory = new ArrayList<>(categories.size());
+        for (CategoryDetails cd : categories) {
+            dataByCategory.add(makeCategoryPieData(cd));
+        }
+        return dataByCategory;
+    }
+
+    private PieData makeCategoryPieData(CategoryDetails categoryDetails) {
+        List<PieEntry> initialValues = new ArrayList<>();
+        PieDataSet dataSet = new PieDataSet(initialValues, categoryDetails.getCategory().getName());
+
+        LiveData<List<CategoryTotal>> categoryPiesLiveData = viewModel.getTotalBySubcategories(categoryDetails.getCategory().getId());
+        ObserverCaretaker<List<CategoryTotal>> observerCaretaker = new ObserverCaretaker<>(getViewLifecycleOwner());
+
+        observerCaretaker.setObserver(categoryPiesLiveData, categoryTotals -> {
+            if (categoryTotals.size() > 0) {
+                List<PieEntry> values = new ArrayList<>(categoryTotals.size());
+                List<Integer> colors = new ArrayList<>(categoryTotals.size());
+                for (CategoryTotal ct : categoryTotals) {
+                    values.add(new PieEntry((float) ct.getTotalValue(), ct.getCategoryName()));
+                    colors.add(ct.getCategoryColor());
+                }
+                dataSet.setValues(values);
+                dataSet.setColors(colors);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        return new PieData(dataSet);
     }
 
     private void navigateToCategoryStats() {

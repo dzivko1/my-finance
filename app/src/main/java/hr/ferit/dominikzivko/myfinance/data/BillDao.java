@@ -33,7 +33,7 @@ public interface BillDao {
 
     @Query("WITH subtree AS (SELECT c.id, c.parentCategoryID FROM category c WHERE c.id = :categoryID " +
             "UNION ALL SELECT cc.id, cc.parentCategoryID FROM category cc JOIN subtree on cc.parentCategoryID = subtree.id) " +
-            "SELECT B.date, B.value FROM bill B join subtree C ON B.categoryID = C.id")
+            "SELECT B.date, B.value FROM bill B JOIN subtree C ON B.categoryID = C.id")
     LiveData<List<DayBillValue>> getDayValuesForCategory(int categoryID);
 
     @Transaction
@@ -47,8 +47,16 @@ public interface BillDao {
     @Query("SELECT SUM(value) FROM bill WHERE date BETWEEN STRFTIME('%s', 'now', 'start of month')*1000 AND STRFTIME('%s', 'now', 'start of month', '+1 month')*1000")
     LiveData<Double> summedValueThisMonth();
 
-    @Query("SELECT category.name AS categoryName, SUM(bill.value) AS totalValue, category.color AS categoryColor " +
-            "FROM category LEFT JOIN bill ON bill.categoryID == category.id GROUP BY category.name ")
-    LiveData<List<CategoryTotal>> totalByCategory();
+    @Query("WITH subtree AS (SELECT c.id, c.parentCategoryID, c.name, c.color FROM category c WHERE c.id = :categoryID " +
+            "UNION ALL SELECT cc.id, cc.parentCategoryID, (SELECT name FROM category WHERE id = :categoryID), (SELECT color FROM category WHERE id = :categoryID) " +
+            "FROM category cc join subtree on cc.parentCategoryID = subtree.id) " +
+            "SELECT c.name AS categoryName, c.color AS categoryColor, SUM(b.value) AS totalValue FROM bill b JOIN subtree c ON b.categoryID = c.id GROUP BY c.name, c.color")
+    LiveData<CategoryTotal> totalByCategory(int categoryID);
+
+    @Query("WITH children AS (SELECT c.id, c.parentCategoryID, c.name, c.color FROM category c WHERE c.parentCategoryID = :categoryID), " +
+            "subtrees AS (SELECT ch.id, ch.name, ch.color, c.id as cid, c.parentCategoryID FROM children ch join category c on c.id = ch.id " +
+            "UNION ALL SELECT s.id, s.name, s.color, cc.id AS ccid, cc.parentCategoryID FROM subtrees s join category cc on cc.parentCategoryID = s.cid) " +
+            "SELECT s.name AS categoryName, s.color AS categoryColor, SUM(b.value) AS totalValue FROM subtrees s join bill b on b.categoryID = s.cid GROUP BY s.id, s.name, s.color")
+    LiveData<List<CategoryTotal>> totalBySubcategories(int categoryID);
 
 }

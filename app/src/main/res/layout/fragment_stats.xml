@@ -171,23 +171,22 @@
 
             </androidx.cardview.widget.CardView>
 
-            <androidx.cardview.widget.CardView
-                style="@style/ChartCard"
+            <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/card_stats_totalByCategoryBarChart">
 
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/chart_stats_totalByCategoryPie"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvCategoryPies"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/tall_chart_height" />
-
-            </androidx.cardview.widget.CardView>
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    app:layoutManager="LinearLayoutManager"
+                     />
+            </RelativeLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

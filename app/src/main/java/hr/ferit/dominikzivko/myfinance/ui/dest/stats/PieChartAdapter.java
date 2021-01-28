@@ -2,6 +2,7 @@ package hr.ferit.dominikzivko.myfinance.ui.dest.stats;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -9,26 +10,26 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.PieData;
 
-import hr.ferit.dominikzivko.myfinance.databinding.ItemLineChartBinding;
+import hr.ferit.dominikzivko.myfinance.databinding.ItemPieChartBinding;
 
-public class LineChartAdapter extends ListAdapter<LineData, LineChartAdapter.ViewHolder> {
+public class PieChartAdapter extends ListAdapter<PieData, PieChartAdapter.ViewHolder> {
 
-    private static final DiffUtil.ItemCallback<LineData> DIFF_CALLBACK = new DiffUtil.ItemCallback<LineData>() {
+    private static final DiffUtil.ItemCallback<PieData> DIFF_CALLBACK = new DiffUtil.ItemCallback<PieData>() {
         @Override
-        public boolean areItemsTheSame(@NonNull LineData oldItem, @NonNull LineData newItem) {
+        public boolean areItemsTheSame(@NonNull PieData oldItem, @NonNull PieData newItem) {
             return oldItem == newItem;
         }
 
         @SuppressLint("DiffUtilEquals")
         @Override
-        public boolean areContentsTheSame(@NonNull LineData oldItem, @NonNull LineData newItem) {
+        public boolean areContentsTheSame(@NonNull PieData oldItem, @NonNull PieData newItem) {
             return oldItem.equals(newItem);
         }
     };
 
-    protected LineChartAdapter() {
+    protected PieChartAdapter() {
         super(DIFF_CALLBACK);
     }
 
@@ -36,7 +37,7 @@ public class LineChartAdapter extends ListAdapter<LineData, LineChartAdapter.Vie
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        ItemLineChartBinding binding = ItemLineChartBinding.inflate(inflater, parent, false);
+        ItemPieChartBinding binding = ItemPieChartBinding.inflate(inflater, parent, false);
         return new ViewHolder(binding);
     }
 
@@ -47,18 +48,18 @@ public class LineChartAdapter extends ListAdapter<LineData, LineChartAdapter.Vie
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final ItemLineChartBinding binding;
+        private final ItemPieChartBinding binding;
 
-        public ViewHolder(@NonNull ItemLineChartBinding binding) {
+        public ViewHolder(@NonNull ItemPieChartBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-            this.binding.chartLine.setAutoScaleMinMaxEnabled(true);
         }
 
-        public void bind(LineData data) {
-            binding.chartLine.setData(data);
-            binding.chartLine.notifyDataSetChanged();
-            binding.chartLine.invalidate();
+        public void bind(PieData data) {
+            binding.chartPie.setVisibility(data.getEntryCount() > 0 ? View.VISIBLE : View.GONE);
+            binding.chartPie.setData(data);
+            binding.chartPie.notifyDataSetChanged();
+            binding.chartPie.invalidate();
             binding.executePendingBindings();
         }
     }

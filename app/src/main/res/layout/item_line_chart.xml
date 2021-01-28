@@ -6,7 +6,7 @@
         android:layout_height="wrap_content">
 
         <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart_categoryStats_dayValue"
+            android:id="@+id/chart_line"
             android:layout_width="match_parent"
             android:layout_height="@dimen/chart_height"/>
     </androidx.cardview.widget.CardView>

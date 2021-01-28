@@ -9,5 +9,5 @@
         android:layout_height="match_parent"
         app:layoutManager="LinearLayoutManager"
         tools:context="ui.dest.stats.CategoryStatsFragment"
-        tools:listitem="@layout/item_chart"/>
+        tools:listitem="@layout/item_line_chart"/>
 </layout>

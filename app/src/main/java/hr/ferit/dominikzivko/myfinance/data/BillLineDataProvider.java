@@ -30,16 +30,16 @@ public class BillLineDataProvider {
     }
 
     public List<LineData> constructData(List<Integer> groupingItemIDs, List<String> labels) {
-        List<LineData> dataByCategory = new ArrayList<>();
+        List<LineData> groupedData = new ArrayList<>();
 
         for (int i = 0; i < groupingItemIDs.size(); i++) {
             int id = groupingItemIDs.get(i);
             String label = labels.get(i);
 
-            // if we send null or an empty list, the thing crashes... *in comes Entry(0,0)*
+            // if we send null or an empty list, chart doesn't update automatically when data is added... *in comes Entry(0,0)*
             LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(Arrays.asList(new Entry(0, 0))), label);
             LineData data = new LineData(dataSet);
-            dataByCategory.add(data);
+            groupedData.add(data);
 
             LiveData<List<DayBillValue>> dayBillValuesLiveData = dayBillValuesProvider.getDayBillValues(id);
             if (observer != null)
@@ -52,7 +52,7 @@ public class BillLineDataProvider {
             };
             dayBillValuesLiveData.observe(lifecycleOwner, observer);
         }
-        return dataByCategory;
+        return groupedData;
     }
 
     private List<Entry> makeDataEntries(List<DayBillValue> dayBillValues) {

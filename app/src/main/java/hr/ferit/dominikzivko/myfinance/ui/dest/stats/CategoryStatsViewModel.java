@@ -24,7 +24,7 @@ public class CategoryStatsViewModel extends ViewModel {
     public LiveData<List<DayBillValue>> getDayBillValues(int categoryID) {
         LiveData<List<DayBillValue>> dayBillValues = dayBillValuesCache.get(categoryID);
         if (dayBillValues == null) {
-            dayBillValues = billRepository.getBillDayValuesForCategory(categoryID);
+            dayBillValues = billRepository.getDayBillValuesForCategory(categoryID);
             dayBillValuesCache.put(categoryID, dayBillValues);
         }
         return dayBillValues;

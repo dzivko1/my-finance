@@ -64,11 +64,15 @@ public class BillRepository {
         return billDao.summedValueThisMonth();
     }
 
-    public LiveData<List<CategoryTotal>> getTotalByCategory() {
-        return billDao.totalByCategory();
+    public LiveData<CategoryTotal> getTotalByCategory(int categoryID) {
+        return billDao.totalByCategory(categoryID);
     }
 
-    public LiveData<List<DayBillValue>> getBillDayValuesForCategory(int categoryID) {
+    public LiveData<List<CategoryTotal>> getTotalBySubcategories(int categoryID) {
+        return billDao.totalBySubcategories(categoryID);
+    }
+
+    public LiveData<List<DayBillValue>> getDayBillValuesForCategory(int categoryID) {
         return billDao.getDayValuesForCategory(categoryID);
     }
 
