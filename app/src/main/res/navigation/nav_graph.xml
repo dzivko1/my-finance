@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_statsToCategoryStats"
             app:destination="@id/categoryStatsFragment" />
+        <action
+            android:id="@+id/action_statsToPartyStats"
+            app:destination="@id/partyStatsFragment" />
     </fragment>
     <fragment
         android:id="@+id/billDetailsFragment"
@@ -132,4 +135,9 @@
         android:name="hr.ferit.dominikzivko.myfinance.ui.dest.stats.CategoryStatsFragment"
         android:label="@string/spending_by_category"
         tools:layout="@layout/fragment_category_stats" />
+    <fragment
+        android:id="@+id/partyStatsFragment"
+        android:name="hr.ferit.dominikzivko.myfinance.ui.dest.stats.PartyStatsFragment"
+        android:label="@string/spending_by_recipient"
+        tools:layout="@layout/fragment_party_stats" />
 </navigation>

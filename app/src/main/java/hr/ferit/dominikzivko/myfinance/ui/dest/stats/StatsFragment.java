@@ -66,7 +66,6 @@ public class StatsFragment extends Fragment {
         BarDataSet dataSet = new BarDataSet(new ArrayList<BarEntry>(Arrays.asList(new BarEntry(0, 0))), getResources().getString(R.string.total_by_category));
         BarData data = new BarData(dataSet);
         binding.chartStatsTotalByCategoryBar.setData(data);
-        binding.chartStatsTotalByCategoryBar.setAutoScaleMinMaxEnabled(true);
 
         LiveData<List<CategoryDetails>> categoriesLiveData = viewModel.getCategories();
         categoriesLiveData.observe(getViewLifecycleOwner(), categories -> {
@@ -105,26 +104,6 @@ public class StatsFragment extends Fragment {
             binding.chartStatsTotalByCategoryBar.notifyDataSetChanged();
             binding.chartStatsTotalByCategoryBar.invalidate();
         });
-    }
-
-    private void updateTotalByCategoryChart(List<CategoryTotal> categoryTotals, BarDataSet barDataSet, FragmentStatsBinding binding) {
-        List<BarEntry> barEntries = new ArrayList<>(categoryTotals.size());
-        List<String> labels = new ArrayList<>(categoryTotals.size());
-        List<Integer> colors = new ArrayList<>(categoryTotals.size());
-
-        int i = 0;
-        for (CategoryTotal ct : categoryTotals) {
-            barEntries.add(new BarEntry(i, (float) ct.getTotalValue()));
-            labels.add(ct.getCategoryName());
-            colors.add(ct.getCategoryColor());
-            i++;
-        }
-
-        barDataSet.setValues(barEntries);
-        barDataSet.setColors(colors);
-        binding.chartStatsTotalByCategoryBar.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
-        binding.chartStatsTotalByCategoryBar.notifyDataSetChanged();
-        binding.chartStatsTotalByCategoryBar.invalidate();
     }
 
     private void setupCategoryPies(FragmentStatsBinding binding) {
@@ -176,7 +155,8 @@ public class StatsFragment extends Fragment {
     }
 
     private void navigateToRecipientStats() {
-
+        NavDirections action = TopLevelFragmentDirections.actionStatsToPartyStats();
+        NavHostFragment.findNavController(this).navigate(action);
     }
 
 }

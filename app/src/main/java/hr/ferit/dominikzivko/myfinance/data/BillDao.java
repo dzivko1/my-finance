@@ -36,6 +36,9 @@ public interface BillDao {
             "SELECT B.date, B.value FROM bill B JOIN subtree C ON B.categoryID = C.id")
     LiveData<List<DayBillValue>> getDayValuesForCategory(int categoryID);
 
+    @Query("SELECT date, value FROM bill WHERE recipientPartyID = :recipientID")
+    LiveData<List<DayBillValue>> getDayValuesForRecipient(int recipientID);
+
     @Transaction
     @Query("SELECT * FROM bill WHERE id = :billID")
     LiveData<BillDetails> getByID(int billID);

@@ -76,6 +76,10 @@ public class BillRepository {
         return billDao.getDayValuesForCategory(categoryID);
     }
 
+    public LiveData<List<DayBillValue>> getDayBillValuesForRecipient(int recipientID) {
+        return billDao.getDayValuesForRecipient(recipientID);
+    }
+
     public void addBill(Bill bill) {
         runAsync(() -> billDao.insert(bill));
     }
