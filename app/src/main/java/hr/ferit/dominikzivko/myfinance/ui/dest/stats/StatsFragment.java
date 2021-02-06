@@ -22,6 +22,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import hr.ferit.dominikzivko.myfinance.R;
@@ -63,46 +64,53 @@ public class StatsFragment extends Fragment {
     }
 
     private void setupTotalByCategoryChart(FragmentStatsBinding binding) {
-        BarDataSet dataSet = new BarDataSet(new ArrayList<BarEntry>(Arrays.asList(new BarEntry(0, 0))), getResources().getString(R.string.total_by_category));
+        BarDataSet dataSet = new BarDataSet(new ArrayList<>(Arrays.asList(new BarEntry(0, 0))), getResources().getString(R.string.total_by_category));
         BarData data = new BarData(dataSet);
+        binding.chartStatsTotalByCategoryBar.setAutoScaleMinMaxEnabled(true);
         binding.chartStatsTotalByCategoryBar.setData(data);
+
+        final HashMap<Integer, ObserverCaretaker<CategoryTotal>> observerStore = new HashMap<>();
 
         LiveData<List<CategoryDetails>> categoriesLiveData = viewModel.getCategories();
         categoriesLiveData.observe(getViewLifecycleOwner(), categories -> {
 
-            dataSet.clear();
+            List<Integer> ids = new ArrayList<>(categories.size());
             List<Integer> colors = new ArrayList<>(categories.size());
             List<String> labels = new ArrayList<>(categories.size());
-
-            int i = 0;
             for (CategoryDetails cd : categories) {
                 if (cd.getCategory().getId() == Category.getRootCategory().getId())
                     continue;
 
+                ids.add(cd.getCategory().getId());
+                colors.add(cd.getCategory().getColor());
+                labels.add(cd.getCategory().getName());
+            }
+            dataSet.setColors(colors);
+            binding.chartStatsTotalByCategoryBar.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+
+            dataSet.clear();
+
+            int i = 0;
+            for (int id : ids) {
+
                 BarEntry entry = new BarEntry(i, 0);
                 dataSet.addEntry(entry);
-                colors.add(new Integer(0));
-                labels.add("");
 
-                LiveData<CategoryTotal> categoryTotalLiveData = viewModel.getTotalByCategory(cd.getCategory().getId());
-                ObserverCaretaker<CategoryTotal> observerCaretaker = new ObserverCaretaker<>(getViewLifecycleOwner());
-                int finalI = i;
+                ObserverCaretaker<CategoryTotal> observerCaretaker = observerStore.get(id);
+                if (observerCaretaker == null) {
+                    observerCaretaker = new ObserverCaretaker<>(getViewLifecycleOwner());
+                    observerStore.put(id, observerCaretaker);
+                }
+
+                LiveData<CategoryTotal> categoryTotalLiveData = viewModel.getTotalByCategory(id);
                 observerCaretaker.setObserver(categoryTotalLiveData, categoryTotal -> {
                     entry.setY((float) categoryTotal.getTotalValue());
-                    colors.set(finalI, categoryTotal.getCategoryColor());
-                    labels.set(finalI, categoryTotal.getCategoryName());
-
                     binding.chartStatsTotalByCategoryBar.notifyDataSetChanged();
                     binding.chartStatsTotalByCategoryBar.invalidate();
                 });
 
                 i++;
             }
-
-            dataSet.setColors(colors);
-            binding.chartStatsTotalByCategoryBar.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
-            binding.chartStatsTotalByCategoryBar.notifyDataSetChanged();
-            binding.chartStatsTotalByCategoryBar.invalidate();
         });
     }
 
@@ -110,28 +118,36 @@ public class StatsFragment extends Fragment {
         adapter = new PieChartAdapter();
         binding.rvCategoryPies.setAdapter(adapter);
 
+        final HashMap<Integer, ObserverCaretaker<List<CategoryTotal>>> observerStore = new HashMap<>();
+
         LiveData<List<CategoryDetails>> categoriesLiveData = viewModel.getCategories();
         categoriesLiveData.observe(getViewLifecycleOwner(), categories -> {
-            List<PieData> data = constructCategoryPiesData(categories);
+            List<PieData> data = constructCategoryPiesData(categories, observerStore);
             adapter.submitList(data);
         });
     }
 
-    private List<PieData> constructCategoryPiesData(List<CategoryDetails> categories) {
+    private List<PieData> constructCategoryPiesData(List<CategoryDetails> categories, HashMap<Integer, ObserverCaretaker<List<CategoryTotal>>> observerStore) {
         List<PieData> dataByCategory = new ArrayList<>(categories.size());
         for (CategoryDetails cd : categories) {
-            dataByCategory.add(makeCategoryPieData(cd));
+            dataByCategory.add(makeCategoryPieData(cd, observerStore));
         }
         return dataByCategory;
     }
 
-    private PieData makeCategoryPieData(CategoryDetails categoryDetails) {
+    private PieData makeCategoryPieData(CategoryDetails categoryDetails, HashMap<Integer, ObserverCaretaker<List<CategoryTotal>>> observerStore) {
+        int id = categoryDetails.getCategory().getId();
+
         List<PieEntry> initialValues = new ArrayList<>();
         PieDataSet dataSet = new PieDataSet(initialValues, categoryDetails.getCategory().getName());
 
-        LiveData<List<CategoryTotal>> categoryPiesLiveData = viewModel.getTotalBySubcategories(categoryDetails.getCategory().getId());
-        ObserverCaretaker<List<CategoryTotal>> observerCaretaker = new ObserverCaretaker<>(getViewLifecycleOwner());
+        ObserverCaretaker<List<CategoryTotal>> observerCaretaker = observerStore.get(id);
+        if (observerCaretaker == null) {
+            observerCaretaker = new ObserverCaretaker<>(getViewLifecycleOwner());
+            observerStore.put(id, observerCaretaker);
+        }
 
+        LiveData<List<CategoryTotal>> categoryPiesLiveData = viewModel.getTotalBySubcategories(id);
         observerCaretaker.setObserver(categoryPiesLiveData, categoryTotals -> {
             if (categoryTotals.size() > 0) {
                 List<PieEntry> values = new ArrayList<>(categoryTotals.size());
