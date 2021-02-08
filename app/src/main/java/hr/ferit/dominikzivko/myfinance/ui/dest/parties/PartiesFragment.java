@@ -31,7 +31,6 @@ public class PartiesFragment extends Fragment {
                              Bundle savedInstanceState) {
         FragmentPartiesBinding binding = FragmentPartiesBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
-        binding.rvParties.setNestedScrollingEnabled(false);
         setupRecycler(binding);
         return binding.getRoot();
     }

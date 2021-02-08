@@ -37,7 +37,7 @@ public class BillLineDataProvider {
             String label = labels.get(i);
 
             // if we send null or an empty list, chart doesn't update automatically when data is added... *in comes Entry(0,0)*
-            LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(Arrays.asList(new Entry(0, 0))), label);
+            LineDataSet dataSet = new LineDataSet(new ArrayList<>(Arrays.asList(new Entry(0, 0))), label);
             LineData data = new LineData(dataSet);
             groupedData.add(data);
 
@@ -67,6 +67,7 @@ public class BillLineDataProvider {
     private void notifyDayBillValuesChanged(List<DayBillValue> dayBillValues) {
         dayBillValuesListener.onDayBillValuesChanged(dayBillValues);
     }
+
 
     public interface DayBillValuesProvider {
         LiveData<List<DayBillValue>> getDayBillValues(int groupingItemID);

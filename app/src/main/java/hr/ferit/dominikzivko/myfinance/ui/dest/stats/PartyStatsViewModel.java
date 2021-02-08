@@ -12,7 +12,7 @@ import hr.ferit.dominikzivko.myfinance.data.Party;
 
 public class PartyStatsViewModel extends ViewModel {
 
-    private BillRepository billRepository;
+    private final BillRepository billRepository;
 
     private final HashMap<Integer, LiveData<List<DayBillValue>>> dayBillValuesCache = new HashMap<>();
     private LiveData<List<Party>> parties;

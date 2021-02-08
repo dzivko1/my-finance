@@ -53,6 +53,7 @@ public class PieChartAdapter extends ListAdapter<PieData, PieChartAdapter.ViewHo
         public ViewHolder(@NonNull ItemPieChartBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            binding.chartPie.getDescription().setEnabled(false);
         }
 
         public void bind(PieData data) {

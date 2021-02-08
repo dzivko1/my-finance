@@ -65,7 +65,7 @@
             android:ems="10"
             android:inputType="numberDecimal"
             android:hint="@string/value"
-            android:text="@={``+viewModel.value}"/>
+            android:text="@={viewModel.value}" />
 
 
     </LinearLayout>

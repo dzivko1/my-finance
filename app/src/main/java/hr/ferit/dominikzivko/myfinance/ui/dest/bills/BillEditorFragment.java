@@ -1,7 +1,6 @@
 package hr.ferit.dominikzivko.myfinance.ui.dest.bills;
 
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,6 @@ import hr.ferit.dominikzivko.myfinance.ActionFailedException;
 import hr.ferit.dominikzivko.myfinance.R;
 import hr.ferit.dominikzivko.myfinance.databinding.FragmentBillEditorBinding;
 import hr.ferit.dominikzivko.myfinance.ui.DatePickerFragment;
-import hr.ferit.dominikzivko.myfinance.ui.SimpleTextWatcher;
 import hr.ferit.dominikzivko.myfinance.ui.UIUtils;
 import hr.ferit.dominikzivko.myfinance.ui.ViewModelProviders;
 import hr.ferit.dominikzivko.myfinance.ui.dest.MainActivity;
@@ -57,13 +55,6 @@ public class BillEditorFragment extends Fragment {
         binding.etBillEditorDate.setOnClickListener(this::showDatePicker);
         // Focus is disabled instead, so no need for second listener
         //binding.etDate.setOnFocusChangeListener((v, hasFocus) -> showDatePicker(v));
-
-        binding.etBillEditorDate.addTextChangedListener(new SimpleTextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                viewModel.setDate(UIUtils.getDateFromString(s.toString()));
-            }
-        });
 
         binding.btnBillEditorPickCategory.setOnClickListener(v -> navigateToCategoryPicker());
         binding.btnBillEditorPickRecipient.setOnClickListener(v -> navigateToRecipientPicker());

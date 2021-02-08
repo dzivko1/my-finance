@@ -52,7 +52,8 @@ public class LineChartAdapter extends ListAdapter<LineData, LineChartAdapter.Vie
         public ViewHolder(@NonNull ItemLineChartBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-            this.binding.chartLine.setAutoScaleMinMaxEnabled(true);
+            binding.chartLine.setAutoScaleMinMaxEnabled(true);
+            binding.chartLine.getDescription().setEnabled(false);
         }
 
         public void bind(LineData data) {

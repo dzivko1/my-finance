@@ -3,7 +3,6 @@ package hr.ferit.dominikzivko.myfinance.ui.dest;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -27,23 +26,16 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.Date;
-
 import hr.ferit.dominikzivko.myfinance.App;
 import hr.ferit.dominikzivko.myfinance.AppContainer;
 import hr.ferit.dominikzivko.myfinance.MathUtils;
 import hr.ferit.dominikzivko.myfinance.NavGraphDirections;
 import hr.ferit.dominikzivko.myfinance.R;
-import hr.ferit.dominikzivko.myfinance.data.Address;
 import hr.ferit.dominikzivko.myfinance.data.AppDatabase;
-import hr.ferit.dominikzivko.myfinance.data.Bill;
-import hr.ferit.dominikzivko.myfinance.data.BillDao;
 import hr.ferit.dominikzivko.myfinance.data.BillDetails;
 import hr.ferit.dominikzivko.myfinance.data.Category;
-import hr.ferit.dominikzivko.myfinance.data.CategoryDao;
 import hr.ferit.dominikzivko.myfinance.data.CategoryDetails;
 import hr.ferit.dominikzivko.myfinance.data.Party;
-import hr.ferit.dominikzivko.myfinance.data.PartyDao;
 import hr.ferit.dominikzivko.myfinance.ui.ViewModelProviders;
 import hr.ferit.dominikzivko.myfinance.ui.dest.bills.BillEditorViewModel;
 import hr.ferit.dominikzivko.myfinance.ui.dest.categories.CategoriesFragmentDirections;
@@ -60,10 +52,6 @@ public class MainActivity extends AppCompatActivity {
     private BottomAppBar bottomAppBar;
     private BottomSheetBehavior<NavigationView> bottomSheetBehavior;
 
-    public BottomAppBar getBottomAppBar() {
-        return bottomAppBar;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,45 +62,19 @@ public class MainActivity extends AppCompatActivity {
 
         // obligatory init for charting library
         Utils.init(getApplicationContext());
+
+        initDatabase();
         initUI();
+    }
 
-        // TODO temp
-        AsyncTask.execute(() -> {
-            //getApplicationContext().deleteDatabase("app-database.db");
-
-            String[] databases = getApplicationContext().databaseList();
-            StringBuilder sb = new StringBuilder();
-            for (String d : databases) {
-                sb.append(d + "   ");
-            }
-            Log.i("MAIN", "Databases: " + sb.toString());
-
-            if (databases.length == 0) {
-                Log.i("MAIN", "New database!");
-
+    private void initDatabase() {
+        String[] databases = getApplicationContext().databaseList();
+        if (databases.length == 0) {
+            AsyncTask.execute(() -> {
                 AppDatabase database = AppDatabase.getInstance(getApplicationContext());
-                BillDao billDao = database.billDao();
-                CategoryDao categoryDao = database.categoryDao();
-                PartyDao partyDao = database.partyDao();
-
-                categoryDao.insert(Category.getRootCategory());
-
-                Category category = new Category("Cat", Color.CYAN, 1);
-                categoryDao.insert(category);
-
-                Party party = new Party("Ime Prezime", new Address("a street", "10", "a city", "30000"));
-                partyDao.insert(party);
-
-                Bill bill = new Bill(new Date(), 2, 1, "opish", 12.21);
-                billDao.insert(bill);
-
-                bill = new Bill(new Date(), 1, 1, "opish222", 102.21);
-                billDao.insert(bill);
-
-                bill = new Bill(new Date(), 1, 1, "reeee", 1200.21);
-                billDao.insert(bill);
-            }
-        });
+                database.categoryDao().insert(Category.getRootCategory());
+            });
+        }
     }
 
     private void initUI() {
@@ -121,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
 
         setupBottomDrawer();
         setupNavAndToolbar();
+        setupBottomAppBar();
         setFabAction(view -> startNewBill());
-        bottomAppBar.setNavigationOnClickListener(v -> openBottomDrawer());
     }
 
     private void setupBottomDrawer() {
@@ -154,7 +116,8 @@ public class MainActivity extends AppCompatActivity {
     private void setupNavAndToolbar() {
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsingToolbarLayout);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.navHost);
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.navHost);
         navController = navHostFragment.getNavController();
         AppBarConfiguration appBarConfiguration =
                 new AppBarConfiguration.Builder(navController.getGraph()).build();
@@ -169,6 +132,22 @@ public class MainActivity extends AppCompatActivity {
             appBarLayout.setExpanded(isTopLevel);
             if (isTopLevel) resetFab();
             else bottomAppBar.performShow();
+        });
+    }
+
+    private void setupBottomAppBar() {
+        bottomAppBar.setNavigationOnClickListener(v -> openBottomDrawer());
+        bottomAppBar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.action_topLevel_newCategory:
+                    startNewCategory();
+                    return true;
+                case R.id.action_topLevel_newParty:
+                    startNewParty();
+                    return true;
+                default:
+                    return false;
+            }
         });
     }
 
@@ -242,6 +221,41 @@ public class MainActivity extends AppCompatActivity {
         navigateToPartyEditor(R.string.edit_party);
     }
 
+    public void navigateToBillEditor(@StringRes int titleRes) {
+        String title = getResources().getString(titleRes);
+        navController.navigate(NavGraphDirections.actionGlobalBillEditor(title));
+    }
+
+    public void navigateToCategoryEditor(@StringRes int titleRes) {
+        String title = getResources().getString(titleRes);
+        navController.navigate(NavGraphDirections.actionGlobalCategoryEditor(title));
+    }
+
+    public void navigateToPartyEditor(@StringRes int titleRes) {
+        String title = getResources().getString(titleRes);
+        navController.navigate(NavGraphDirections.actionGlobalPartyEditor(title));
+    }
+
+    private void navigateToCategories() {
+        String title = getResources().getString(R.string.categories);
+        CategoryAdapter.ItemClickListener itemClickListener = category -> {
+            CategoriesFragmentDirections.ActionCategoryListToDetails action =
+                    CategoriesFragmentDirections.actionCategoryListToDetails(category.getId());
+            navController.navigate(action);
+        };
+        navController.navigate(NavGraphDirections.actionGlobalCategories(title, itemClickListener));
+    }
+
+    private void navigateToParties() {
+        String title = getResources().getString(R.string.parties);
+        PartyAdapter.ItemClickListener itemClickListener = party -> {
+            PartiesFragmentDirections.ActionPartyListToDetails action =
+                    PartiesFragmentDirections.actionPartyListToDetails(party.getId());
+            navController.navigate(action);
+        };
+        navController.navigate(NavGraphDirections.actionGlobalParties(title, itemClickListener));
+    }
+
     private void openBottomDrawer() {
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
@@ -268,40 +282,5 @@ public class MainActivity extends AppCompatActivity {
 
         closeBottomDrawer();
         return true;
-    }
-
-    private void navigateToCategories() {
-        String title = getResources().getString(R.string.categories);
-        CategoryAdapter.ItemClickListener itemClickListener = category -> {
-            CategoriesFragmentDirections.ActionCategoryListToDetails action =
-                    CategoriesFragmentDirections.actionCategoryListToDetails(category.getId());
-            navController.navigate(action);
-        };
-        navController.navigate(NavGraphDirections.actionGlobalCategories(title, itemClickListener));
-    }
-
-    private void navigateToParties() {
-        String title = getResources().getString(R.string.parties);
-        PartyAdapter.ItemClickListener itemClickListener = party -> {
-            PartiesFragmentDirections.ActionPartyListToDetails action =
-                    PartiesFragmentDirections.actionPartyListToDetails(party.getId());
-            navController.navigate(action);
-        };
-        navController.navigate(NavGraphDirections.actionGlobalParties(title, itemClickListener));
-    }
-
-    public void navigateToBillEditor(@StringRes int titleRes) {
-        String title = getResources().getString(titleRes);
-        navController.navigate(NavGraphDirections.actionGlobalBillEditor(title));
-    }
-
-    public void navigateToCategoryEditor(@StringRes int titleRes) {
-        String title = getResources().getString(titleRes);
-        navController.navigate(NavGraphDirections.actionGlobalCategoryEditor(title));
-    }
-
-    public void navigateToPartyEditor(@StringRes int titleRes) {
-        String title = getResources().getString(titleRes);
-        navController.navigate(NavGraphDirections.actionGlobalPartyEditor(title));
     }
 }

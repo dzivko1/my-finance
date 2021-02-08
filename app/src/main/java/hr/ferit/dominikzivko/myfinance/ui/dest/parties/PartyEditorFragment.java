@@ -42,11 +42,11 @@ public class PartyEditorFragment extends Fragment {
     public void onStart() {
         super.onStart();
         MainActivity activity = (MainActivity) requireActivity();
-        activity.setFabAction(v -> acceptNewParty());
+        activity.setFabAction(v -> acceptEdits());
         activity.setFabIcon(R.drawable.ic_baseline_check_24);
     }
 
-    private void acceptNewParty() {
+    private void acceptEdits() {
         try {
             viewModel.tryApply();
             navigateUp();

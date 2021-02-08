@@ -12,14 +12,16 @@ public class BillsViewModel extends ViewModel {
 
     private final BillRepository billRepository;
 
-    private final LiveData<List<BillDetails>> bills;
+    private LiveData<List<BillDetails>> bills;
 
     public BillsViewModel(BillRepository billRepository) {
         this.billRepository = billRepository;
-        this.bills = billRepository.getBills();
     }
 
     public LiveData<List<BillDetails>> getBills() {
+        if (bills == null) {
+            bills = billRepository.getBills();
+        }
         return bills;
     }
 }

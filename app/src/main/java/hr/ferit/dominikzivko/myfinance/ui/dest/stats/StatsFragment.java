@@ -38,7 +38,7 @@ public class StatsFragment extends Fragment {
 
     private StatsViewModel viewModel;
 
-    private PieChartAdapter adapter;
+    private PieChartAdapter categoryPieAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,9 +64,11 @@ public class StatsFragment extends Fragment {
     }
 
     private void setupTotalByCategoryChart(FragmentStatsBinding binding) {
+        binding.chartStatsTotalByCategoryBar.getDescription().setEnabled(false);
+        binding.chartStatsTotalByCategoryBar.setAutoScaleMinMaxEnabled(true);
+
         BarDataSet dataSet = new BarDataSet(new ArrayList<>(Arrays.asList(new BarEntry(0, 0))), getResources().getString(R.string.total_by_category));
         BarData data = new BarData(dataSet);
-        binding.chartStatsTotalByCategoryBar.setAutoScaleMinMaxEnabled(true);
         binding.chartStatsTotalByCategoryBar.setData(data);
 
         final HashMap<Integer, ObserverCaretaker<CategoryTotal>> observerStore = new HashMap<>();
@@ -104,7 +106,7 @@ public class StatsFragment extends Fragment {
 
                 LiveData<CategoryTotal> categoryTotalLiveData = viewModel.getTotalByCategory(id);
                 observerCaretaker.setObserver(categoryTotalLiveData, categoryTotal -> {
-                    entry.setY((float) categoryTotal.getTotalValue());
+                    entry.setY(categoryTotal != null ? (float) categoryTotal.getTotalValue() : 0f);
                     binding.chartStatsTotalByCategoryBar.notifyDataSetChanged();
                     binding.chartStatsTotalByCategoryBar.invalidate();
                 });
@@ -115,15 +117,15 @@ public class StatsFragment extends Fragment {
     }
 
     private void setupCategoryPies(FragmentStatsBinding binding) {
-        adapter = new PieChartAdapter();
-        binding.rvCategoryPies.setAdapter(adapter);
+        categoryPieAdapter = new PieChartAdapter();
+        binding.rvCategoryPies.setAdapter(categoryPieAdapter);
 
         final HashMap<Integer, ObserverCaretaker<List<CategoryTotal>>> observerStore = new HashMap<>();
 
         LiveData<List<CategoryDetails>> categoriesLiveData = viewModel.getCategories();
         categoriesLiveData.observe(getViewLifecycleOwner(), categories -> {
             List<PieData> data = constructCategoryPiesData(categories, observerStore);
-            adapter.submitList(data);
+            categoryPieAdapter.submitList(data);
         });
     }
 
@@ -158,7 +160,7 @@ public class StatsFragment extends Fragment {
                 }
                 dataSet.setValues(values);
                 dataSet.setColors(colors);
-                adapter.notifyDataSetChanged();
+                categoryPieAdapter.notifyDataSetChanged();
             }
         });
 

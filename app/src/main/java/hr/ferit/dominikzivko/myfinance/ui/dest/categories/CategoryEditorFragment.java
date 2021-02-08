@@ -52,11 +52,11 @@ public class CategoryEditorFragment extends Fragment {
     public void onStart() {
         super.onStart();
         MainActivity activity = (MainActivity) requireActivity();
-        activity.setFabAction(v -> acceptNewCategory());
+        activity.setFabAction(v -> acceptEdits());
         activity.setFabIcon(R.drawable.ic_baseline_check_24);
     }
 
-    private void acceptNewCategory() {
+    private void acceptEdits() {
         try {
             viewModel.tryApply();
             navigateUp();

@@ -12,14 +12,16 @@ public class CategoriesViewModel extends ViewModel {
 
     private final BillRepository billRepository;
 
-    private final LiveData<List<CategoryDetails>> categories;
+    private LiveData<List<CategoryDetails>> categories;
 
     public CategoriesViewModel(BillRepository billRepository) {
         this.billRepository = billRepository;
-        this.categories = billRepository.getCategories();
     }
 
     public LiveData<List<CategoryDetails>> getCategories() {
+        if (categories == null) {
+            categories = billRepository.getCategories();
+        }
         return categories;
     }
 }

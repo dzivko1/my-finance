@@ -12,14 +12,16 @@ public class PartiesViewModel extends ViewModel {
 
     private final BillRepository billRepository;
 
-    private final LiveData<List<Party>> parties;
+    private LiveData<List<Party>> parties;
 
     public PartiesViewModel(BillRepository billRepository) {
         this.billRepository = billRepository;
-        parties = billRepository.getParties();
     }
 
     public LiveData<List<Party>> getParties() {
+        if (parties == null) {
+            parties = billRepository.getParties();
+        }
         return parties;
     }
 }

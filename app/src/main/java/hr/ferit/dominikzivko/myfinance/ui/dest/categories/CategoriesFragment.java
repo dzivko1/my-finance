@@ -30,7 +30,6 @@ public class CategoriesFragment extends Fragment {
                              Bundle savedInstanceState) {
         FragmentCategoriesBinding binding = FragmentCategoriesBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());
-        binding.rvCategories.setNestedScrollingEnabled(false);
         setupRecycler(binding);
         return binding.getRoot();
     }
